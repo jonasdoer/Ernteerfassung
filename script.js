@@ -51,9 +51,11 @@ function render() {
       maximumFractionDigits: 2
     }) + " t";
 
-  document.querySelector("#dayWeight").textContent =
-    kg(entries.filter(e => String(e.datum).substring(0, 10) === today)
-      .reduce((s, e) => s + (Number(e.menge) || 0), 0));
+  const todayGerman = new Date().toLocaleDateString("de-DE");
+
+document.querySelector("#dayWeight").textContent =
+  kg(entries.filter(e => String(e.datum) === todayGerman)
+    .reduce((s, e) => s + (Number(e.menge) || 0), 0));
 
   [1, 2, 3].forEach(silo => {
     document.querySelector(`#silo${silo}`).textContent =
