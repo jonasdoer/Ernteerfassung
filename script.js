@@ -51,10 +51,14 @@ function render() {
       maximumFractionDigits: 2
     }) + " t";
 
-  const todayGerman = new Date().toLocaleDateString("de-DE");
+const todayGerman = new Intl.DateTimeFormat("de-DE", {
+  day: "2-digit",
+  month: "2-digit",
+  year: "numeric"
+}).format(new Date());
 
 document.querySelector("#dayWeight").textContent =
-  kg(entries.filter(e => String(e.datum) === todayGerman)
+  kg(entries.filter(e => String(e.datum).trim() === todayGerman)
     .reduce((s, e) => s + (Number(e.menge) || 0), 0));
 
   [1, 2, 3].forEach(silo => {
