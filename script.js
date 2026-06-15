@@ -8,6 +8,7 @@ const today = new Date().toISOString().slice(0, 10);
 form.elements.datum.value = today;
 
 let entries = [];
+let activeSiloFilter = "all";
 
 const fields = [
   "betrieb", "schlag", "wagen", "feldfrucht", "datum", "menge",
@@ -31,9 +32,13 @@ async function loadEntries() {
 function render() {
   const term = search.value.toLowerCase();
 
-  const filtered = entries.filter(e =>
-    Object.values(e).join(" ").toLowerCase().includes(term)
-  );
+ const filtered = entries.filter(e => {
+  const matchesSearch = Object.values(e).join(" ").toLowerCase().includes(term);
+  const matchesSilo =
+    activeSiloFilter === "all" || String(e.silo) === activeSiloFilter;
+
+  return matchesSearch && matchesSilo;
+});
 
   rows.innerHTML = filtered.map(e => `
     <tr>
@@ -43,6 +48,8 @@ function render() {
   `).join("") || `<tr><td colspan="12">Noch keine Einträge vorhanden.</td></tr>`;
 
   const total = entries.reduce((s, e) => s + (Number(e.menge) || 0), 0);
+  document.querySelector("#allSilos").textContent = kg(total);
+  
 
   document.querySelector("#totalKg").textContent = kg(total);
   document.querySelector("#totalTon").textContent =
@@ -114,6 +121,19 @@ document.querySelector("#exportCsv").addEventListener("click", () => {
   a.download = "ernteerfassung.csv";
   a.click();
   URL.revokeObjectURL(url);
+});
+
+document.querySelectorAll("[data-silo-filter]").forEach(card => {
+  card.addEventListener("click", () => {
+    activeSiloFilter = card.dataset.siloFilter;
+
+    document.querySelectorAll("[data-silo-filter]").forEach(c =>
+      c.classList.remove("active")
+    );
+
+    card.classList.add("active");
+    render();
+  });
 });
 
 loadEntries();
