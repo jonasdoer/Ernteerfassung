@@ -51,20 +51,45 @@ function render() {
       maximumFractionDigits: 2
     }) + " t";
 
-const todayGerman = new Intl.DateTimeFormat("de-DE", {
-  day: "2-digit",
-  month: "2-digit",
-  year: "numeric"
-}).format(new Date());
+  const todayGerman = new Intl.DateTimeFormat("de-DE", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric"
+  }).format(new Date());
 
-document.querySelector("#dayWeight").textContent =
-  kg(entries.filter(e => String(e.datum).trim() === todayGerman)
-    .reduce((s, e) => s + (Number(e.menge) || 0), 0));
+  document.querySelector("#dayWeight").textContent =
+    kg(entries.filter(e => String(e.datum).trim() === todayGerman)
+      .reduce((s, e) => s + (Number(e.menge) || 0), 0));
 
   [1, 2, 3].forEach(silo => {
     document.querySelector(`#silo${silo}`).textContent =
       kg(entries.filter(e => String(e.silo) === String(silo))
         .reduce((s, e) => s + (Number(e.menge) || 0), 0));
+  });
+
+  renderSiloMenus();
+}
+
+function renderSiloMenus() {
+  const betriebe = ["Bockholt", "Düren", "Steffen", "Ruck"];
+
+  [1, 2, 3].forEach(silo => {
+    const siloEntries = entries.filter(e => String(e.silo) === String(silo));
+    const total = siloEntries.reduce((sum, e) => sum + (Number(e.menge) || 0), 0);
+
+    const menuRows = [
+      `<div class="silo-menu-title">Silo ${silo}</div>`,
+      `<div class="silo-menu-row total"><span>Gesamt</span><strong>${kg(total)}</strong></div>`,
+      ...betriebe.map(betrieb => {
+        const betriebTotal = siloEntries
+          .filter(e => String(e.betrieb) === betrieb)
+          .reduce((sum, e) => sum + (Number(e.menge) || 0), 0);
+
+        return `<div class="silo-menu-row"><span>${escapeHtml(betrieb)}</span><strong>${kg(betriebTotal)}</strong></div>`;
+      })
+    ].join("");
+
+    document.querySelector(`#siloMenu${silo}`).innerHTML = menuRows;
   });
 }
 
@@ -115,5 +140,40 @@ document.querySelector("#exportCsv").addEventListener("click", () => {
   a.click();
   URL.revokeObjectURL(url);
 });
+
+document.querySelectorAll("[data-silo-menu]").forEach(card => {
+  card.addEventListener("click", event => {
+    event.stopPropagation();
+    toggleSiloMenu(card);
+  });
+
+  card.addEventListener("keydown", event => {
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      toggleSiloMenu(card);
+    }
+  });
+});
+
+document.addEventListener("click", () => {
+  closeSiloMenus();
+});
+
+function toggleSiloMenu(card) {
+  const willOpen = !card.classList.contains("open");
+  closeSiloMenus();
+
+  if (willOpen) {
+    card.classList.add("open");
+    card.setAttribute("aria-expanded", "true");
+  }
+}
+
+function closeSiloMenus() {
+  document.querySelectorAll("[data-silo-menu]").forEach(card => {
+    card.classList.remove("open");
+    card.setAttribute("aria-expanded", "false");
+  });
+}
 
 loadEntries();

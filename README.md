@@ -9,4 +9,4 @@ Diese statische Website kann direkt über GitHub Pages veröffentlicht werden.
 4. Speichern. Danach ist die Website über die angezeigte GitHub-Pages-Adresse erreichbar.
 
 ## Hinweis
-Die Eingaben werden im Browser per LocalStorage gespeichert. Für mehrere Geräte oder Benutzer ist später eine Datenbank nötig.
+Die Eingaben werden über die angebundene Google-Sheets-Web-App gespeichert. Die Silo-Karten zeigen beim Anklicken die Gesamtmenge und die Mengen je Betrieb pro Silo.
