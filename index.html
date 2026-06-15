@@ -23,9 +23,22 @@
   <main>
     <section class="stats" aria-label="Zusammenfassung">
       <article><span>Tagesgewicht</span><strong id="dayWeight">0 kg</strong></article>
-      <article><span>Silo 1</span><strong id="silo1">0 kg</strong></article>
-      <article><span>Silo 2</span><strong id="silo2">0 kg</strong></article>
-      <article><span>Silo 3</span><strong id="silo3">0 kg</strong></article>
+
+      <article class="clickable-stat active" data-silo-filter="all">
+      <span>Alle Silos</span><strong id="allSilos">0 kg</strong>
+      </article>
+      <article class="clickable-stat" data-silo-filter="1">
+      <span>Silo 1</span><strong id="silo1">0 kg</strong>
+      </article>
+      <article class="clickable-stat" data-silo-filter="2">
+      <span>Silo 2</span><strong id="silo2">0 kg</strong>
+      </article>
+      <article class="clickable-stat" data-silo-filter="3">
+      <span>Silo 3</span><strong id="silo3">0 kg</strong>
+        
+      </article>
+
+      
     </section>
 
     <section class="panel">
