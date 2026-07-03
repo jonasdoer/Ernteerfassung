@@ -22,17 +22,23 @@
 
   <main>
     <section class="stats" aria-label="Zusammenfassung">
-      <article><span>Tagesgewicht</span><strong id="dayWeight">0 kg</strong></article>
+      <article>
+        <span>Tagesgewicht</span>
+        <strong id="dayWeight">0 kg</strong>
+      </article>
       <article class="silo-card" data-silo-menu="1" tabindex="0" role="button" aria-expanded="false">
-        <span>Silo 1</span><strong id="silo1">0 kg</strong>
+        <span>Silo 1</span>
+        <strong id="silo1">0 kg</strong>
         <div class="silo-menu" id="siloMenu1"></div>
       </article>
       <article class="silo-card" data-silo-menu="2" tabindex="0" role="button" aria-expanded="false">
-        <span>Silo 2</span><strong id="silo2">0 kg</strong>
+        <span>Silo 2</span>
+        <strong id="silo2">0 kg</strong>
         <div class="silo-menu" id="siloMenu2"></div>
       </article>
       <article class="silo-card" data-silo-menu="3" tabindex="0" role="button" aria-expanded="false">
-        <span>Silo 3</span><strong id="silo3">0 kg</strong>
+        <span>Silo 3</span>
+        <strong id="silo3">0 kg</strong>
         <div class="silo-menu" id="siloMenu3"></div>
       </article>
     </section>
@@ -42,11 +48,15 @@
         <h2>Neue Ernte erfassen</h2>
         <button id="clearAll" class="danger" type="button">Alle Daten löschen</button>
       </div>
+      
       <form id="entryForm" class="grid-form">
         <label>Betrieb
           <select name="betrieb" required>
             <option value="">Bitte wählen</option>
-            <option>Bockholt</option><option>Düren</option><option>Steffen</option><option>Ruck</option>
+            <option>Bockholt</option>
+            <option>Düren</option>
+            <option>Steffen</option>
+            <option>Ruck</option>
           </select>
         </label>
         <label>Schlag / Fläche
@@ -58,15 +68,29 @@
         <label>Feldfrucht
           <select name="feldfrucht" required>
             <option value="">Bitte wählen</option>
-            <option>Weizen</option><option>Gerste</option><option>Hafer</option><option>Raps</option><option>Mais</option><option>Zuckerrüben</option><option>Kartoffeln</option>
+            <option>Weizen</option>
+            <option>Gerste</option>
+            <option>Hafer</option>
+            <option>Raps</option>
+            <option>Mais</option>
+            <option>Zuckerrüben</option>
+            <option>Kartoffeln</option>
           </select>
         </label>
         <label>Erntedatum
           <input name="datum" type="date" required />
         </label>
-        <label>Erntemenge (kg)
-          <input name="menge" type="number" min="0" step="1" required />
+        
+        <label>Leergewicht (kg)
+          <input name="leergewicht" id="leergewicht" type="number" min="0" step="1" required />
         </label>
+        <label>Bruttogewicht (kg)
+          <input name="bruttogewicht" id="bruttogewicht" type="number" min="0" step="1" required />
+        </label>
+        <label>Nettogewicht / Erntemenge (kg)
+          <input name="menge" id="menge" type="number" min="0" step="1" readonly tabindex="-1" style="background: var(--bg);" />
+        </label>
+        
         <label>Feuchtigkeit (%)
           <input name="feuchtigkeit" type="number" min="0" max="100" step="0.1" />
         </label>
@@ -79,12 +103,16 @@
         <label>Silo
           <select name="silo" required>
             <option value="">Bitte wählen</option>
-            <option value="1">Silo 1</option><option value="2">Silo 2</option><option value="3">Silo 3</option>
+            <option value="1">Silo 1</option>
+            <option value="2">Silo 2</option>
+            <option value="3">Silo 3</option>
           </select>
         </label>
+        
         <label class="wide">Bemerkung
           <input name="bemerkung" placeholder="Optional" />
         </label>
+        
         <div class="actions wide">
           <button type="submit">Eintrag speichern</button>
           <button type="button" id="exportCsv" class="secondary">CSV exportieren</button>
@@ -99,9 +127,24 @@
       </div>
       <div class="table-wrap">
         <table>
-          <thead><tr>
-            <th>Betrieb</th><th>Schlag/Fläche</th><th>Wagen Nr.</th><th>Feldfrucht</th><th>Datum</th><th>Menge kg</th><th>Feuchte %</th><th>HL kg/hl</th><th>TS kg</th><th>Silo</th><th>Bemerkung</th><th></th>
-          </tr></thead>
+          <thead>
+            <tr>
+              <th>Betrieb</th>
+              <th>Schlag/Fläche</th>
+              <th>Wagen Nr.</th>
+              <th>Feldfrucht</th>
+              <th>Datum</th>
+              <th>Leer kg</th>
+              <th>Brutto kg</th>
+              <th>Netto kg</th>
+              <th>Feuchte %</th>
+              <th>HL kg/hl</th>
+              <th>TS kg</th>
+              <th>Silo</th>
+              <th>Bemerkung</th>
+              <th></th>
+            </tr>
+          </thead>
           <tbody id="rows"></tbody>
         </table>
       </div>

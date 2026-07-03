@@ -10,7 +10,7 @@ form.elements.datum.value = today;
 let entries = [];
 
 const fields = [
-  "betrieb", "schlag", "wagen", "feldfrucht", "datum", "menge",
+  "betrieb", "schlag", "wagen", "feldfrucht", "datum", "leergewicht", "bruttogewicht", "menge",
   "feuchtigkeit", "hlgewicht", "trockensubstanz", "silo", "bemerkung"
 ];
 
@@ -177,3 +177,25 @@ function closeSiloMenus() {
 }
 
 loadEntries();
+
+// Felder für die Gewichtsberechnung auswählen
+const inputLeer = document.querySelector("#leergewicht");
+const inputBrutto = document.querySelector("#bruttogewicht");
+const inputNetto = document.querySelector("#menge");
+
+// Funktion zur Berechnung des Nettogewichts
+function calculateNetto() {
+  const leer = Number(inputLeer.value) || 0;
+  const brutto = Number(inputBrutto.value) || 0;
+  
+  // Nur rechnen, wenn Brutto größer als Leer ist
+  if (brutto > 0 && brutto >= leer) {
+    inputNetto.value = brutto - leer;
+  } else {
+    inputNetto.value = ""; // Feld leeren, falls die Eingabe unlogisch ist
+  }
+}
+
+// Sobald sich in den Feldern etwas ändert, wird neu gerechnet
+inputLeer.addEventListener("input", calculateNetto);
+inputBrutto.addEventListener("input", calculateNetto);
