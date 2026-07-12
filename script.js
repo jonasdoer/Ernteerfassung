@@ -71,7 +71,7 @@ function render() {
 }
 
 function renderSiloMenus() {
-  const betriebe = ["Bockholt", "Düren", "Steffen", "Ruck"];
+  const betriebe = ["Bockholt", "Düren", "Steffen", "Agrarhandel Ruhr"];
 
   [1, 2, 3].forEach(silo => {
     const siloEntries = entries.filter(e => String(e.silo) === String(silo));
