@@ -11,7 +11,7 @@ let entries = [];
 
 const fields = [
   "betrieb", "schlag", "wagen", "feldfrucht", "datum", "leergewicht", "bruttogewicht", "menge",
-  "feuchtigkeit", "hlgewicht", "Protein", "silo", "bemerkung"
+  "feuchtigkeit", "fkleb", "sedi",  "hlgewicht", "Protein", "silo", "bemerkung"
 ];
 
 function kg(n) {
@@ -56,29 +56,61 @@ function render() {
     month: "2-digit",
     year: "numeric"
   }).format(new Date());
+  
+  //Berechnet das Gesamtgewicht des aktuellen Tages
+  const dayTotal = entries.filter(e => String(e.datum).trim() === todayGerman)
+						  .reduce((s, e) => s + (Number(e.menge) || 0), 0);
 
-  document.querySelector("#dayWeight").textContent =
-    kg(entries.filter(e => String(e.datum).trim() === todayGerman)
-      .reduce((s, e) => s + (Number(e.menge) || 0), 0));
+  document.querySelector("#dayWeightKg").textContent = kg(dayTotal);
+  document.querySelector("#dayWeightTon").textContent = (dayTotal / 1000).toLocaleString("de-DE", {
+	  minimumFractionDigits: 2,
+	  maximumFractionDigits: 2
+  }) + " t";
 
-  [1, 2, 3].forEach(silo => {
-    document.querySelector(`#silo${silo}`).textContent =
-      kg(entries.filter(e => String(e.silo) === String(silo))
+  // NEU: Zentrale Liste aller Silos
+  const siloNamen = [
+    "Düren Flachlager alt", 
+    "Düren Trockner", 
+    "Düren Silo 1", 
+    "Düren Silo 2", 
+    "Düren Bucht Sumpf", 
+    "Düren Box 1", 
+    "Düren Box 2",
+	"Bockholt große Bucht",
+	"Bockholt vor Trockner",
+	"Bockholt kleine Bucht",
+	"Ruck vorne 1",
+	"Ruck vorne 2",
+	"Ruck vorne 3",
+	"Ruck vorne 4",
+	"Ruck hinten 1",
+	"Ruck hinten 2",
+	"Ruck hinten 3",
+	"Ruck hinten 4"
+  ];
+
+  siloNamen.forEach((name, index) => {
+    const htmlId = index + 1; // Generiert IDs von 1 bis 7
+    const element = document.querySelector(`#silo${htmlId}`);
+    if (element) {
+      element.textContent = kg(entries.filter(e => String(e.silo) === name)
         .reduce((s, e) => s + (Number(e.menge) || 0), 0));
+    }
   });
 
-  renderSiloMenus();
+  renderSiloMenus(siloNamen);
 }
 
-function renderSiloMenus() {
+function renderSiloMenus(siloNamen) {
   const betriebe = ["Bockholt", "Düren", "Steffen", "Agrarhandel Ruhr"];
 
-  [1, 2, 3].forEach(silo => {
-    const siloEntries = entries.filter(e => String(e.silo) === String(silo));
+  siloNamen.forEach((name, index) => {
+    const htmlId = index + 1;
+    const siloEntries = entries.filter(e => String(e.silo) === name);
     const total = siloEntries.reduce((sum, e) => sum + (Number(e.menge) || 0), 0);
 
     const menuRows = [
-      `<div class="silo-menu-title">Silo ${silo}</div>`,
+      `<div class="silo-menu-title">${escapeHtml(name)}</div>`,
       `<div class="silo-menu-row total"><span>Gesamt</span><strong>${kg(total)}</strong></div>`,
       ...betriebe.map(betrieb => {
         const betriebTotal = siloEntries
@@ -89,7 +121,10 @@ function renderSiloMenus() {
       })
     ].join("");
 
-    document.querySelector(`#siloMenu${silo}`).innerHTML = menuRows;
+    const menuElement = document.querySelector(`#siloMenu${htmlId}`);
+    if (menuElement) {
+      menuElement.innerHTML = menuRows;
+    }
   });
 }
 
