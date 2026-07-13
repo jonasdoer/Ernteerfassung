@@ -11,7 +11,7 @@ let entries = [];
 
 const fields = [
   "betrieb", "schlag", "wagen", "feldfrucht", "datum", "leergewicht", "bruttogewicht", "menge",
-  "feuchtigkeit", "fkleb", "sedi",  "testgewicht", "Protein", "silo", "bemerkung"
+  "feuchtigkeit", "fkleb", "sedi",  "testgewicht", "protein", "silo", "bemerkung"
 ];
 
 function kg(n) {
