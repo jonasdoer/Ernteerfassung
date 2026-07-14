@@ -100,7 +100,6 @@ function render() {
 
   renderSiloMenus(siloNamen);
 }
-
 function renderSiloMenus(siloNamen) {
   const betriebe = ["Bockholt", "Düren", "Steffen", "Agrarhandel Ruhr"];
 
@@ -108,6 +107,24 @@ function renderSiloMenus(siloNamen) {
     const htmlId = index + 1;
     const siloEntries = entries.filter(e => String(e.silo) === name);
     const total = siloEntries.reduce((sum, e) => sum + (Number(e.menge) || 0), 0);
+
+    // NEU: Durchschnittliches Protein berechnen
+    let proteinSum = 0;
+    let proteinCount = 0;
+    
+    siloEntries.forEach(e => {
+      // Wandelt eventuelle Kommas in Punkte um, damit JavaScript fehlerfrei rechnet
+      const pVal = parseFloat(String(e.protein).replace(',', '.'));
+      // Zählt nur Einträge, bei denen auch wirklich ein Protein-Wert > 0 eingetragen wurde
+      if (!isNaN(pVal) && pVal > 0) { 
+        proteinSum += pVal;
+        proteinCount++;
+      }
+    });
+    
+    const avgProtein = proteinCount > 0 ? (proteinSum / proteinCount) : 0;
+    // Formatiert die Zahl auf eine Nachkommastelle (z. B. "14,5")
+    const avgProteinStr = avgProtein.toLocaleString("de-DE", { minimumFractionDigits: 1, maximumFractionDigits: 1 });
 
     const menuRows = [
       `<div class="silo-menu-title">${escapeHtml(name)}</div>`,
@@ -118,7 +135,11 @@ function renderSiloMenus(siloNamen) {
           .reduce((sum, e) => sum + (Number(e.menge) || 0), 0);
 
         return `<div class="silo-menu-row"><span>${escapeHtml(betrieb)}</span><strong>${kg(betriebTotal)}</strong></div>`;
-      })
+      }),
+      // NEU: Zusätzliche Zeile für den Protein-Durchschnitt ganz unten im Menü
+      `<div class="silo-menu-row" style="margin-top: 6px; border-top: 1px dashed var(--line); padding-top: 8px;">
+        <span>Ø Protein</span><strong>${avgProteinStr} kg</strong>
+      </div>`
     ].join("");
 
     const menuElement = document.querySelector(`#siloMenu${htmlId}`);
