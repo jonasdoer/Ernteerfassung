@@ -10,7 +10,7 @@ form.elements.datum.value = today;
 let entries = [];
 
 const fields = [
-  "betrieb", "schlag", "wagen", "feldfrucht", "datum", "leergewicht", "bruttogewicht", "menge",
+  "betrieb", "schlag", "wagen", "feldfrucht", "datum", "einwiegen", "auswiegen", "menge",
   "feuchtigkeit", "fkleb", "sedi",  "testgewicht", "protein", "silo", "bemerkung"
 ];
 
@@ -233,23 +233,23 @@ function closeSiloMenus() {
 loadEntries();
 
 // Felder für die Gewichtsberechnung auswählen
-const inputLeer = document.querySelector("#leergewicht");
-const inputBrutto = document.querySelector("#bruttogewicht");
+const inputEinwiegen = document.querySelector("#einwiegen");
+const inputAuswiegen = document.querySelector("#auswiegen");
 const inputNetto = document.querySelector("#menge");
 
 // Funktion zur Berechnung des Nettogewichts
 function calculateNetto() {
-  const leer = Number(inputLeer.value) || 0;
-  const brutto = Number(inputBrutto.value) || 0;
+  const ein = Number(inputEinwiegen.value) || 0;
+  const aus = Number(inputAuswiegen.value) || 0;
   
-  // Nur rechnen, wenn Brutto größer als Leer ist
-  if (brutto > 0 && brutto >= leer) {
-    inputNetto.value = brutto - leer;
+  // Nur rechnen, wenn Einwiegen größer als Auswiegen ist
+  if (ein > 0 && ein >= aus) {
+    inputNetto.value = ein - aus;
   } else {
     inputNetto.value = ""; // Feld leeren, falls die Eingabe unlogisch ist
   }
 }
 
 // Sobald sich in den Feldern etwas ändert, wird neu gerechnet
-inputLeer.addEventListener("input", calculateNetto);
-inputBrutto.addEventListener("input", calculateNetto);
+inputEinwiegen.addEventListener("input", calculateNetto);
+inputAuswiegen.addEventListener("input", calculateNetto);
