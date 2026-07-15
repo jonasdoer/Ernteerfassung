@@ -71,8 +71,6 @@ function render() {
   const siloNamen = [
     "Düren Flachlager alt", 
     "Düren Trockner", 
-    "Düren Silo 1", 
-    "Düren Silo 2", 
     "Düren Bucht Sumpf", 
     "Düren Box 1", 
     "Düren Box 2",
